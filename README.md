@@ -10,7 +10,7 @@ From *StackOverFlow* :
 > day dozen times on the developer machines.
 
 
- -  Difference between @Mock and @InjectMocks annotations
+#### Difference between @Mock and @InjectMocks annotations
  As in *HowToDoInJava* (https://howtodoinjava.com/mockito/mockito-mock-injectmocks/) :
 > * @Mock – creates mocks
 > * @InjectMocks – creates objects and inject mocked dependencies
@@ -19,13 +19,13 @@ From *StackOverFlow* :
 > network locations etc. A method invoked using mocked reference does not execute method body defined in class 
 > file, rather the method behavior is configured using when-thenReturn methods combinations.
 > 
-> In a junit test, we create objects for the class which needs to be tested and it’s methods to be invoked. We
+> In a junit test, we create objects for the class which needs to be tested and it's methods to be invoked. We
 > create mocks for the dependencies which will not be present in test environment and objects are dependent on 
 > it to complete the method call.
  
- - Difference between @Mock and @MockBean
+#### Difference between @Mock and @MockBean
  
- When you don´t need any dependencies from SpringBoot container, you can use @Mock.
+ When you don't need any dependencies from SpringBoot container, you can use @Mock.
  @MockBean can be used to add mocks to a Spring context.
  
  Spring Boot documentation:
@@ -34,12 +34,14 @@ From *StackOverFlow* :
  > @MockBean to provide mock implementations for required collaborators.
  
 
- - SpringRunner vs SpringJUnit4ClassRunner
+ #### SpringRunner vs SpringJUnit4ClassRunner
  
  SpringRunner is just an alias for the SpringJUnit4ClassRunner. SpringRunner is available on spring-test 4.3.
  It extends SpringJUnit4ClassRunner
 
-- MockitoJUnitRunner
+#### MockitoJUnitRunner
 
-It doesn´t load the complete Spring context. It´s faster  than SpringRunner. It´s used for simple test of single java class.
-By using this MockitoJUnitRunner enable to use @Mock annotation. If you don´t use MockitoJUnitRunner, you have to use Mockito.mock() method.
+It doesn't load the complete Spring context. It's faster  than SpringRunner. It's used for simple test of single java class.
+By using this MockitoJUnitRunner enable to use @Mock annotation. If you don't use MockitoJUnitRunner, you have to use Mockito.mock() method.
+
+*Rodrigo Formagio*
