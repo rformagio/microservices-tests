@@ -1,15 +1,12 @@
 package br.com.rformagio.microservice.person.controller;
 
 import br.com.rformagio.microservice.person.TesteUtil;
-import br.com.rformagio.microservice.person.data.PersonData;
 import br.com.rformagio.microservice.person.controller.validator.ValidateData;
+import br.com.rformagio.microservice.person.data.PersonData;
 import br.com.rformagio.microservice.person.exception.PersonNotFoundExcepetion;
 import br.com.rformagio.microservice.person.service.PersonService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -19,10 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -31,24 +30,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(PersonController.class)
-public class PersonControllerTest2 {
+public class PersonControllerTest3 {
 
     @Autowired
     MockMvc mockMvc;
 
-    @TestConfiguration
-    static class PersonControllerTest2Configuration {
-        @Bean
-        public ValidateData validateData(){
-            return new ValidateData();
-        }
-
-    }
-
     @MockBean
     PersonService personService;
 
-    @Autowired
+    @MockBean
     ValidateData validateData;
 
     @Test
@@ -71,6 +61,9 @@ public class PersonControllerTest2 {
 
         final String ID_INVALID = "string";
 
+        given(validateData.validateId(ID_INVALID)).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                "Id must be a number"));
+
         given(personService.findById(anyLong())).willReturn(null);
 
         mockMvc.perform(get("/api/v1/person/" + ID_INVALID)
@@ -79,7 +72,7 @@ public class PersonControllerTest2 {
     }
 
     @Test
-    public void givenValidId_whenFindById_thenReturnBadRequest() throws Exception{
+    public void givenValidId_whenFindById_thenReturnPerson() throws Exception{
 
         final Long ID = 1L;
 
@@ -89,8 +82,9 @@ public class PersonControllerTest2 {
                 .id(ID)
                 .build();
 
-        given(personService.findById(ID)).willReturn(personData);
+        given(validateData.validateId(String.valueOf(ID))).willReturn(ID);
 
+        given(personService.findById(ID)).willReturn(personData);
 
         mockMvc.perform(get("/api/v1/person/" + ID)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -103,6 +97,8 @@ public class PersonControllerTest2 {
     public void givenANotFoundId_whenFindById_thenShouldReturnNotFound() throws Exception {
 
         final Long ID_NOT_FOUND = 1001L;
+
+        given(validateData.validateId(String.valueOf(ID_NOT_FOUND))).willReturn(ID_NOT_FOUND);
 
         given(personService.findById(anyLong())).willThrow(PersonNotFoundExcepetion.class);
 

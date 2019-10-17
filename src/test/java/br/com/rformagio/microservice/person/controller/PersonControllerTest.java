@@ -7,11 +7,11 @@ import br.com.rformagio.microservice.person.service.PersonService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -32,13 +32,13 @@ public class PersonControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    @MockBean
-    PersonService personService;
-
     @Before
     public void init(){
         MockitoAnnotations.initMocks(this);
     }
+
+    @Mock
+    PersonService personService;
 
     @Test
     public void givenTheNewPerson_whenCreate_thenReturnTheId() throws Exception{
